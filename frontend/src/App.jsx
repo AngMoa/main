@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 
 function App() {
@@ -10,7 +10,7 @@ function App() {
         });
     }, []);
     return (
-        <div className="App">
+        <div className="ml-5">
             백엔드 데이터 : {hello}
             테스트문구
         </div>
