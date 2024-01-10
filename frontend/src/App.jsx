@@ -1,19 +1,24 @@
-import React, { useEffect, useState } from "react";
-import axiosInstance from "./api/axiosInstance";
+import React from "react";
+import { BrowserRouter } from "react-router-dom";
+import Router from "./router/router";
+import Header from "./components/common/Header";
+import Footer from "./components/common/Footer";
 
 function App() {
-    const [hello, setHello] = useState("");
+    // const [hello, setHello] = useState("");
 
-    useEffect(() => {
-        axiosInstance.get("/test").then((res) => {
-            setHello(res.data);
-        });
-    }, []);
+    // useEffect(() => {
+    //     axiosInstance.get("/test").then((res) => {
+    //         setHello(res.data);
+    //     });
+    // }, []);
+
     return (
-        <div className="ml-5">
-            백엔드 데이터 : {hello}
-            테스트문구
-        </div>
+        <BrowserRouter>
+            <Header />
+            <Router />
+            <Footer />
+        </BrowserRouter>
     );
 }
 
