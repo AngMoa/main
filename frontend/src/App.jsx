@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import axiosInstance from "./api/axiosInstance";
 
 function App() {
     const [hello, setHello] = useState("");
 
     useEffect(() => {
-        axios.get("/api/test").then((res) => {
+        axiosInstance.get("/test").then((res) => {
             setHello(res.data);
         });
     }, []);
