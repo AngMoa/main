@@ -5,7 +5,7 @@ function App() {
     const [hello, setHello] = useState('');
 
     useEffect(() => {
-        axios.get('/test')
+        axios.get('/api/test')
             .then((res) => {
                 setHello(res.data);
             })
