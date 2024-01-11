@@ -1,19 +1,24 @@
-import {useEffect, useState} from "react";
-import axios from "axios";
+import React from "react";
+import { BrowserRouter } from "react-router-dom";
+import Router from "./router/router";
+import Header from "./components/common/Header";
+import Footer from "./components/common/Footer";
 
 function App() {
-    const [hello, setHello] = useState('');
+    // const [hello, setHello] = useState("");
 
-    useEffect(() => {
-        axios.get('/api/test')
-            .then((res) => {
-                setHello(res.data);
-            })
-    }, []);
+    // useEffect(() => {
+    //     axiosInstance.get("/test").then((res) => {
+    //         setHello(res.data);
+    //     });
+    // }, []);
+
     return (
-        <div className="App">
-            백엔드 데이터 : {hello}
-        </div>
+        <BrowserRouter>
+            <Header />
+            <Router />
+            <Footer />
+        </BrowserRouter>
     );
 }
 
