@@ -24,6 +24,15 @@ public class UserService {
         return userDao.login(userId, hashedPassword);
     }
 
+    public String getUserPassword(String userId) {
+        // Assuming userDao.getUserPassword returns the password hash for the given userId
+        return userDao.getUserPassword(userId);
+    }
+
+    public int join(Map<String, String> userDetail) {
+        return userDao.join(userDetail);
+    }
+
     // 권한체크(로그인 여부 확인)
     public List<Map<String, Object>> checkLoginInfo() {
         ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
@@ -32,7 +41,7 @@ public class UserService {
 
         List<Map<String, Object>> loginInfo = new ArrayList<>();
 
-        loginInfo = sqlSessionTemplate.selectList("LoginMapper.selLoginId", userId);
+        loginInfo = sqlSessionTemplate.selectList("UserMapper.selLoginId", userId);
 
         return loginInfo;
     }

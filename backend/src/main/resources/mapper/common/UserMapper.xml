@@ -11,9 +11,44 @@
           AND USER_PASSWORD = #{password}
     </select>
 
+    <select id="encodePw" resultType="String" parameterType="String">
+        SELECT USER_PASSWORD
+        FROM C##ECODEV.COMM_USER_MST
+        WHERE USER_ID = #{userId}
+    </select>
+
     <select id="selLoginId" resultType="int" parameterType="String">
         SELECT 1
         FROM C##ECODEV.COMM_USER_MST
         WHERE USER_ID = #{session.userId}
     </select>
+    
+    <insert id="insUser" parameterType="Map">
+        INSERT INTO C##ECODEV.COMM_USER_MST
+             (
+               USER_ID
+             , USER_PASSWORD
+             , USER_NM
+             <if test="USER_ADDR != null">
+             , USER_ADDR
+             </if>
+             <if test="USER_HP_NO != null">
+             , USER_HP_NO
+             </if>
+             , CRER_ID
+             )
+        VALUES
+             (
+               #{userId}
+             , #{password}
+             , #{userNm}
+             <if test="USER_ADDR != null">
+             , #{userAddr}
+             </if>
+             <if test="USER_HP_NO != null">
+             , #{userHpNo}
+             </if>
+             , 'admin'
+             )
+    </insert>
 </mapper>
