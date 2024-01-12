@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="UserMapper">
+    <select id="login" resultType="Map" parameterType="Map">
+        SELECT 1
+        FROM C##ECODEV.COMM_USER_MST
+        WHERE USER_ID = #{userId}
+          AND USER_PASSWORD = #{password}
+    </select>
+
+    <select id="selLoginId" resultType="int" parameterType="String">
+        SELECT 1
+        FROM C##ECODEV.COMM_USER_MST
+        WHERE USER_ID = #{session.userId}
+    </select>
+</mapper>

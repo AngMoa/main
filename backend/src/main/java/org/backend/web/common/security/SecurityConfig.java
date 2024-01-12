@@ -1,53 +1,45 @@
-//package org.backend.web.common.security;
-//
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.context.annotation.Bean;
-//import org.springframework.context.annotation.Configuration;
-//import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-//import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-//import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-//import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-//import org.springframework.security.crypto.password.PasswordEncoder;
-//
-//import javax.sql.DataSource;
-//
-//@Configuration
-//@EnableWebSecurity
-//public class SecurityConfig extends WebSecurityConfigurerAdapter {
-//
-//    @Autowired
-//    private DataSource dataSource;
-//
-//    @Bean
-//    protected void configure(HttpSecurity http) throws Exception {
-//        http
-//            .authorizeRequests()
-//                .antMatchers("/admin/**").hasAnyRole("ADMIN")
-//                .antMatchers("/register").permitAll()
-//                .antMatchers("/**", "/public/**").permitAll()
-//                .anyRequest().authenticated()
-//                .and()
-//            .formLogin()
-//                .loginPage("/login")
-//                .permitAll()
-//                .defaultSuccessUrl("/")
-//                .and()
-//            .logout()
-//                .permitAll();
-//    }
-//
-//    @Autowired
-//    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-//        auth.jdbcAuthentication()
-//                .dataSource(dataSource)
-//                .usersByUsernameQuery("SELECT USER_ID, USER_PASSWORD FROM C##ECODEV.COMM_USER_MST WHERE USER_ID=?")
-//                .authoritiesByUsernameQuery("SELECT USER_ID, USER_AUTH FROM C##ECODEV.COMM_USER_AUTH WHERE USER_ID=?")
-//                .passwordEncoder(passwordEncoder());
-//    }
-//
-//    @Bean
-//    public PasswordEncoder passwordEncoder() {
-//        return new BCryptPasswordEncoder();
-//    }
-//}
+package org.backend.web.common.security;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
+
+import javax.sql.DataSource;
+
+@RequiredArgsConstructor
+@Configuration
+@EnableWebSecurity
+@Component
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http
+            .csrf().disable()//csrf토큰 비활성화(테스트시 걸어두는게 좋음) 시큐리티는 csrf토큰이 있어야 접근가능함
+            .authorizeRequests()
+                .antMatchers("/com/login", "/").permitAll()
+                .anyRequest().authenticated()
+                .and()
+            .formLogin()
+                .loginPage("/com/login")
+                .defaultSuccessUrl("/")
+                .permitAll()
+                .and()
+            .logout()
+                .permitAll();
+        http.sessionManagement() //중복로그인 제어
+                .maximumSessions(1) //세션 최대 허용 수
+                .maxSessionsPreventsLogin(false); // false이면 중복 로그인하면 이전 로그인이 풀린다.
+    }
+}
