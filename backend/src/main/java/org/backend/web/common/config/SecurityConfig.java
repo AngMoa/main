@@ -1,4 +1,4 @@
-package org.backend.web.common.security;
+package org.backend.web.common.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -9,8 +9,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-
-import javax.sql.DataSource;
 
 @RequiredArgsConstructor
 @Configuration
@@ -28,7 +26,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
             .csrf().disable()//csrf토큰 비활성화(테스트시 걸어두는게 좋음) 시큐리티는 csrf토큰이 있어야 접근가능함
             .authorizeRequests()
-                .antMatchers("/com/login","/com/join", "/").permitAll()
+                .antMatchers("/com/login","/com/join", "/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
             .formLogin()
