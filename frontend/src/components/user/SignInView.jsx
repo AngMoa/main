@@ -20,13 +20,11 @@ const SignInView = () => {
         e.preventDefault();
 
         try {
-            const res = await axiosInstance.get(`/com/login`, {
-                body: {
-                    userId: loginInput.userId,
-                    password: loginInput.password,
-                },
+            const res = await axiosInstance.post(`/com/login`, {
+                userId: loginInput.userId,
+                password: loginInput.password,
             });
-            if (res.status === 201) {
+            if (res.status === 200) {
                 console.log(res.data);
             }
         } catch (error) {
