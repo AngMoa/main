@@ -29,11 +29,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/com/login","/com/join", "/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
-            .formLogin()
-                .loginPage("/com/login")
-                .defaultSuccessUrl("/")
-                .permitAll()
-                .and()
+//            .formLogin()
+//                .loginPage("/com/login")
+//                .defaultSuccessUrl("/")
+//                .permitAll()
+//                .and()
             .logout()
                 .permitAll();
         http.sessionManagement() //중복로그인 제어

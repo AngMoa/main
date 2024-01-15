@@ -3,6 +3,7 @@ package org.backend.web.common.controller;
 import lombok.extern.slf4j.Slf4j;
 import org.backend.web.common.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,9 +25,9 @@ public class UserController {
     @Autowired
     UserService userService;
 
-    @GetMapping(value = "/login")
-    public List<Map<String, Object>> login(@RequestBody Map<String, String> request,
-                                           HttpServletRequest httpRequest) {
+    @PostMapping(value = "/login")
+    public ResponseEntity<List<Map<String, Object>>> login(@RequestBody Map<String, String> request,
+                                                           HttpServletRequest httpRequest) {
         String userId = request.get("userId");
         String enteredPassword = request.get("password");
 
@@ -42,13 +43,15 @@ public class UserController {
             HttpSession session = httpRequest.getSession();
             session.setAttribute("userId", userId);
 
-            return loginList;
+            return ResponseEntity.ok(loginList);
         } else {
-            return Collections.emptyList();
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Collections.emptyList());
         }
     }
 
-    @GetMapping("/logout")
+
+
+    @PostMapping("/logout")
     public ResponseEntity<String> logout(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         if (session != null) {
