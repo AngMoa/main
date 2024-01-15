@@ -7,15 +7,15 @@ const Header = () => {
         <>
             <nav className="bg-white border-gray-200 dark:bg-gray-900">
                 <div className="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl p-4">
-                    <a
-                        href=""
+                    <Link
+                        to="/"
                         className="flex items-center space-x-3 rtl:space-x-reverse"
                     >
                         <img src={logo} className="h-8" alt="AngMoa Logo" />
                         {/* <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
                             AngMoa
                         </span> */}
-                    </a>
+                    </Link>
                     <div className="flex items-center space-x-6 rtl:space-x-reverse">
                         <a
                             href=""
@@ -37,13 +37,13 @@ const Header = () => {
                     <div className="flex items-center justify-between">
                         <ul className="flex flex-row font-medium mt-0 space-x-8 rtl:space-x-reverse text-sm">
                             <li>
-                                <a
-                                    href="#"
+                                <Link
+                                    to="/"
                                     className="text-gray-900 dark:text-white hover:underline"
                                     aria-current="page"
                                 >
                                     홈
-                                </a>
+                                </Link>
                             </li>
                             <li>
                                 <a
