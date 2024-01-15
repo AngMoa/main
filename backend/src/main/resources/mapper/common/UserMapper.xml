@@ -5,7 +5,7 @@
 
 <mapper namespace="UserMapper">
     <select id="login" resultType="Map" parameterType="Map">
-        SELECT 1
+        SELECT USER_NM
         FROM C##ECODEV.COMM_USER_MST
         WHERE USER_ID = #{userId}
           AND USER_PASSWORD = #{password}
@@ -21,6 +21,12 @@
         SELECT 1
         FROM C##ECODEV.COMM_USER_MST
         WHERE USER_ID = #{session.userId}
+    </select>
+
+    <select id="idCheck" resultType="Map" parameterType="String">
+        SELECT COUNT(*)
+        FROM C##ECODEV.COMM_USER_MST
+        WHERE USER_ID = #{userId}
     </select>
     
     <insert id="insUser" parameterType="Map">

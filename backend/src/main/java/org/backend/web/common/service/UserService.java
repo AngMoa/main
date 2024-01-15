@@ -29,6 +29,10 @@ public class UserService {
         return userDao.getUserPassword(userId);
     }
 
+    public List<Map<String, Object>> idCheck(String userId) {
+        return userDao.idCheck(userId);
+    }
+
     public int join(Map<String, String> userDetail) {
         return userDao.join(userDetail);
     }

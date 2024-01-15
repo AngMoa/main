@@ -35,6 +35,10 @@ public class UserDao {
         }
     }
 
+    public List<Map<String, Object>> idCheck(String userId) {
+        return sqlSessionTemplate.selectList("UserMapper.idCheck", userId);
+    }
+
 
     public int join(Map<String, String> userDetail) {
         int insUser = 0;

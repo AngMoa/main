@@ -60,6 +60,12 @@ public class UserController {
         return ResponseEntity.ok("Logged out successfully");
     }
 
+    @PostMapping(value = "/idCheck")
+    public List<Map<String, Object>> idCheck(@RequestBody Map<String, String> request) {
+        String userId = request.get("userId");
+        return userService.idCheck(userId);
+    }
+
     @PostMapping("/join")
     public int join(@RequestBody List<Map<String, String>> userDetailList) {
         int totalJoinedUsers = 0;
