@@ -6,27 +6,30 @@
 <mapper namespace="UserMapper">
     <select id="login" resultType="Map" parameterType="Map">
         SELECT USER_NM
-        FROM C##ECODEV.COMM_USER_MST
-        WHERE USER_ID = #{userId}
-          AND USER_PASSWORD = #{password}
+          FROM C##ECODEV.COMM_USER_MST
+         WHERE USER_ID = #{userId}
+           AND USER_PASSWORD = #{password}
     </select>
 
     <select id="encodePw" resultType="String" parameterType="String">
         SELECT USER_PASSWORD
-        FROM C##ECODEV.COMM_USER_MST
-        WHERE USER_ID = #{userId}
+          FROM C##ECODEV.COMM_USER_MST
+         WHERE USER_ID = #{userId}
     </select>
 
     <select id="selLoginId" resultType="int" parameterType="String">
         SELECT 1
-        FROM C##ECODEV.COMM_USER_MST
-        WHERE USER_ID = #{session.userId}
+          FROM C##ECODEV.COMM_USER_MST
+         WHERE USER_ID = #{session.userId}
     </select>
 
-    <select id="idCheck" resultType="Map" parameterType="String">
+    <select id="idCheck" resultType="Map" parameterType="Map">
         SELECT COUNT(*)
-        FROM C##ECODEV.COMM_USER_MST
-        WHERE USER_ID = #{userId}
+          FROM C##ECODEV.COMM_USER_MST
+         WHERE USER_ID = #{userId}
+        <if test="userNm != null">
+           AND USER_NM = #{userNm}
+        </if>
     </select>
     
     <insert id="insUser" parameterType="Map">
@@ -35,10 +38,10 @@
                USER_ID
              , USER_PASSWORD
              , USER_NM
-             <if test="USER_ADDR != null">
+             <if test="userAddr != null">
              , USER_ADDR
              </if>
-             <if test="USER_HP_NO != null">
+             <if test="userHpNo != null">
              , USER_HP_NO
              </if>
              , CRER_ID
@@ -48,13 +51,33 @@
                #{userId}
              , #{password}
              , #{userNm}
-             <if test="USER_ADDR != null">
+             <if test="userAddr != null">
              , #{userAddr}
              </if>
-             <if test="USER_HP_NO != null">
+             <if test="userHpNo != null">
              , #{userHpNo}
              </if>
              , 'admin'
              )
     </insert>
+
+    <select id="findId" resultType="Map" parameterType="Map">
+        SELECT USER_ID
+        FROM C##ECODEV.COMM_USER_MST
+        WHERE USER_NM = #{userNm}
+          AND USER_HP_NO = #{userHpNo}
+    </select>
+
+    <update id="updatePw" parameterType="Map">
+        UPDATE C##ECODEV.COMM_USER_MST
+           SET USER_PASSWORD = #{chgPw}
+         WHERE USER_ID = #{userId}
+           AND USER_NM = #{userNm}
+        <if test="userHpNo != null">
+           AND USER_HP_NO = #{userHpNo}
+        </if>
+        <if test="password != null">
+           AND USER_PASSWORD = #{password}
+        </if>
+    </update>
 </mapper>

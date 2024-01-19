@@ -25,6 +25,7 @@ public class UserController {
     @Autowired
     UserService userService;
 
+    // 로그인
     @PostMapping(value = "/login")
     public ResponseEntity<List<Map<String, Object>>> login(@RequestBody Map<String, String> request,
                                                            HttpServletRequest httpRequest) {
@@ -49,8 +50,7 @@ public class UserController {
         }
     }
 
-
-
+    // 로그아웃
     @PostMapping("/logout")
     public ResponseEntity<String> logout(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
@@ -60,12 +60,13 @@ public class UserController {
         return ResponseEntity.ok("Logged out successfully");
     }
 
+    // id 중복체크, id 확인이 필요한 경우
     @PostMapping(value = "/idCheck")
-    public List<Map<String, Object>> idCheck(@RequestBody Map<String, String> request) {
-        String userId = request.get("userId");
-        return userService.idCheck(userId);
+    public List<Map<String, Object>> idCheck(@RequestBody Map<String, String> idCheckMap) {
+        return userService.idCheck(idCheckMap);
     }
 
+    // 회원가입
     @PostMapping("/join")
     public int join(@RequestBody List<Map<String, String>> userDetailList) {
         int totalJoinedUsers = 0;
@@ -73,18 +74,61 @@ public class UserController {
         for (Map<String, String> userDetail : userDetailList) {
             String password = userDetail.get("password");
 
-            // Hash the password using BCryptPasswordEncoder
+            // 비밀번호 암호화
             String hashedPassword = passwordEncoder.encode(password);
 
-            System.out.println("회원가입 hashedPassword = "+hashedPassword);
-
-            // Update the password in the userDetail map
+            // 암호화된 비밀번호로 저장
             userDetail.put("password", hashedPassword);
 
-            // Assuming that userService.join returns the number of users joined
             totalJoinedUsers += userService.join(userDetail);
         }
 
         return totalJoinedUsers;
+    }
+
+    // 아이디 찾기
+    @PostMapping("/findId")
+    public List<Map<String, Object>> findId(@RequestBody Map<String, String> request) {
+        String userNm = request.get("userNm");
+        String userHpNo = request.get("userHpNo");
+        return userService.findId(userNm, userHpNo);
+    }
+
+    // 비밀번호 찾기
+    @PostMapping("/findPw")
+    public List<Map<String, Object>> findPw(@RequestBody Map<String, String> findPwMap) {
+        String chgPw = findPwMap.get("chgPw");
+        // 비밀번호 암호화
+        String hashedPassword = passwordEncoder.encode(chgPw);
+        findPwMap.put("chgPw", hashedPassword);
+
+        List<Map<String, Object>> findPwList = userService.chgPw(findPwMap);
+
+        return findPwList;
+    }
+
+    // 비밀번호 변경
+    @PostMapping("/chgPw")
+    public ResponseEntity<String> chgPw(@RequestBody Map<String, String> chgPwMap) {
+        String userId = chgPwMap.get("userId");
+        // 입력받은 패스워드
+        String enteredPassword = chgPwMap.get("password");
+        // 암호화된 패스워드
+        String storedPasswordHash = userService.getUserPassword(userId);
+
+        // 입력된 비밀번호, 암호화된 비밀번호 비교
+        boolean passwordMatches = passwordEncoder.matches(enteredPassword, storedPasswordHash);
+
+        if (passwordMatches) {
+            String chgPw = chgPwMap.get("chgPw");
+            // 비밀번호 암호화
+            String hashedPassword = passwordEncoder.encode(chgPw);
+            chgPwMap.put("chgPw", hashedPassword);
+
+            List<Map<String, Object>> chgPwList = userService.chgPw(chgPwMap);
+            return ResponseEntity.ok("change pw success");
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Collections.singletonList("change pw fail").toString());
+        }
     }
 }

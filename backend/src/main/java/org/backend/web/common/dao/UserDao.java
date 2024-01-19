@@ -35,8 +35,8 @@ public class UserDao {
         }
     }
 
-    public List<Map<String, Object>> idCheck(String userId) {
-        return sqlSessionTemplate.selectList("UserMapper.idCheck", userId);
+    public List<Map<String, Object>> idCheck(Map<String, String> idCheckMap) {
+        return sqlSessionTemplate.selectList("UserMapper.idCheck", idCheckMap);
     }
 
 
@@ -61,5 +61,26 @@ public class UserDao {
         }
 
         return insUser;
+    }
+
+    public List<Map<String, Object>> findId(String userNm, String userHpNo) {
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("userNm", userNm);
+        params.put("userHpNo", userHpNo);
+
+        List<Map<String, Object>> userId = new ArrayList<>();
+
+        userId = sqlSessionTemplate.selectList("UserMapper.findId", params);
+
+        return userId;
+    }
+
+    public List<Map<String, Object>> findPw(Map<String, String> findPwMap) {
+        return sqlSessionTemplate.selectList("UserMapper.updatePw", findPwMap);
+    }
+
+    public List<Map<String, Object>> chgPw(Map<String, String> chgPwMap) {
+        return sqlSessionTemplate.selectList("UserMapper.updatePw", chgPwMap);
     }
 }

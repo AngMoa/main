@@ -25,12 +25,11 @@ public class UserService {
     }
 
     public String getUserPassword(String userId) {
-        // Assuming userDao.getUserPassword returns the password hash for the given userId
         return userDao.getUserPassword(userId);
     }
 
-    public List<Map<String, Object>> idCheck(String userId) {
-        return userDao.idCheck(userId);
+    public List<Map<String, Object>> idCheck(Map<String, String> idCheckMap) {
+        return userDao.idCheck(idCheckMap);
     }
 
     public int join(Map<String, String> userDetail) {
@@ -48,5 +47,17 @@ public class UserService {
         loginInfo = sqlSessionTemplate.selectList("UserMapper.selLoginId", userId);
 
         return loginInfo;
+    }
+
+    public List<Map<String, Object>> findId(String userId, String userHpNo) {
+        return userDao.findId(userId, userHpNo);
+    }
+
+    public List<Map<String, Object>> findPw(Map<String, String> findPwMap) {
+        return userDao.findPw(findPwMap);
+    }
+
+    public List<Map<String, Object>> chgPw(Map<String, String> chgPwMap) {
+        return userDao.chgPw(chgPwMap);
     }
 }
