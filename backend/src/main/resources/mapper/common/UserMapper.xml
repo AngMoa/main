@@ -65,7 +65,7 @@
         SELECT USER_ID
         FROM C##ECODEV.COMM_USER_MST
         WHERE USER_NM = #{userNm}
-          AND USER_HP_NO = #{userHpNo}
+          AND USER_EMAIL = #{userEmail}
     </select>
 
     <update id="updatePw" parameterType="Map">
@@ -73,9 +73,7 @@
            SET USER_PASSWORD = #{chgPw}
          WHERE USER_ID = #{userId}
            AND USER_NM = #{userNm}
-        <if test="userHpNo != null">
-           AND USER_HP_NO = #{userHpNo}
-        </if>
+           AND USER_EMAIL = #{userEmail}
         <if test="password != null">
            AND USER_PASSWORD = #{password}
         </if>
