@@ -367,3 +367,4 @@ $RECYCLE.BIN/
 # End of https://www.toptal.com/developers/gitignore/api/windows,visualstudiocode,intellij,node,java
 
 /backend/.metadata/*
+/backend/src/main/java/org/backend/web/config/EmailConfig.java
