@@ -28,7 +28,7 @@ public class MailController {
             return "ok";
         }
         else{
-            throw new NullPointerException("관리자에게 문의해주세요.");
+            throw new NullPointerException("인증번호를 확인해주세요.");
         }
     }
 }
