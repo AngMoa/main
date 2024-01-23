@@ -81,12 +81,12 @@ const Header = () => {
                                 </Link>
                             </li>
                             <li>
-                                <a
-                                    href="#"
+                                <Link
+                                    to="signUp"
                                     className="text-gray-900 dark:text-white hover:underline"
                                 >
                                     회원가입
-                                </a>
+                                </Link>
                             </li>
                             <li>
                                 <a
