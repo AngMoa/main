@@ -6,26 +6,27 @@
 <mapper namespace="UserMapper">
     <select id="login" resultType="Map" parameterType="Map">
         SELECT USER_NM
-          FROM C##ECODEV.COMM_USER_MST
+             , NICKNAME
+          FROM angmoa.COMM_USER_MST
          WHERE USER_ID = #{userId}
            AND USER_PASSWORD = #{password}
     </select>
 
     <select id="encodePw" resultType="String" parameterType="String">
         SELECT USER_PASSWORD
-          FROM C##ECODEV.COMM_USER_MST
+          FROM angmoa.COMM_USER_MST
          WHERE USER_ID = #{userId}
     </select>
 
     <select id="selLoginId" resultType="int" parameterType="String">
         SELECT 1
-          FROM C##ECODEV.COMM_USER_MST
+          FROM angmoa.COMM_USER_MST
          WHERE USER_ID = #{session.userId}
     </select>
 
     <select id="idCheck" resultType="Map" parameterType="Map">
         SELECT COUNT(*)
-          FROM C##ECODEV.COMM_USER_MST
+          FROM angmoa.COMM_USER_MST
          WHERE USER_ID = #{userId}
         <if test="userNm != null">
            AND USER_NM = #{userNm}
@@ -33,16 +34,20 @@
     </select>
     
     <insert id="insUser" parameterType="Map">
-        INSERT INTO C##ECODEV.COMM_USER_MST
+        INSERT INTO angmoa.COMM_USER_MST
              (
                USER_ID
              , USER_PASSWORD
              , USER_NM
+             , USER_EMAIL
              <if test="userAddr != null">
              , USER_ADDR
              </if>
              <if test="userHpNo != null">
              , USER_HP_NO
+             </if>
+             <if test="nickname != null">
+             , NICKNAME
              </if>
              , CRER_ID
              )
@@ -51,25 +56,44 @@
                #{userId}
              , #{password}
              , #{userNm}
+             , #{userEmail}
              <if test="userAddr != null">
              , #{userAddr}
              </if>
              <if test="userHpNo != null">
              , #{userHpNo}
              </if>
+             <if test="nickname != null">
+             , #{nickname}
+             </if>
              , 'admin'
              )
     </insert>
 
+    <insert id="insProfileImg" parameterType="Map">
+        INSERT INTO angmoa.FILE_MST
+        (
+        USER_ID
+        , FILE_NM
+        , FILE_ID
+        )
+        VALUES
+        (
+        #{userId}
+        , #{imageNm}
+        , #{userNm}
+        )
+    </insert>
+
     <select id="findId" resultType="Map" parameterType="Map">
         SELECT USER_ID
-        FROM C##ECODEV.COMM_USER_MST
+        FROM angmoa.COMM_USER_MST
         WHERE USER_NM = #{userNm}
           AND USER_EMAIL = #{userEmail}
     </select>
 
     <update id="updatePw" parameterType="Map">
-        UPDATE C##ECODEV.COMM_USER_MST
+        UPDATE angmoa.COMM_USER_MST
            SET USER_PASSWORD = #{chgPw}
          WHERE USER_ID = #{userId}
            AND USER_NM = #{userNm}

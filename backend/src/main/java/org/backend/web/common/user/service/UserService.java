@@ -1,6 +1,6 @@
-package org.backend.web.common.service;
+package org.backend.web.common.user.service;
 
-import org.backend.web.common.dao.UserDao;
+import org.backend.web.common.user.dao.UserDao;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -49,8 +49,8 @@ public class UserService {
         return loginInfo;
     }
 
-    public List<Map<String, Object>> findId(String userId, String userHpNo) {
-        return userDao.findId(userId, userHpNo);
+    public List<Map<String, Object>> findId(String userId, String userEmail) {
+        return userDao.findId(userId, userEmail);
     }
 
     public List<Map<String, Object>> findPw(Map<String, String> findPwMap) {

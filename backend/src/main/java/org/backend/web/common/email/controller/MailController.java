@@ -1,10 +1,9 @@
-package org.backend.web.common.controller;
+package org.backend.web.common.email.controller;
 
-import org.backend.web.common.dto.EmailRequestDto;
-import org.backend.web.common.dto.EmailCheckDto;
-import org.backend.web.common.service.MailSendService;
+import org.backend.web.common.email.dto.EmailRequestDto;
+import org.backend.web.common.email.dto.EmailCheckDto;
+import org.backend.web.common.email.service.MailSendService;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.annotations.Check;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;

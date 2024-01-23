@@ -1,4 +1,4 @@
-package org.backend.web.error;
+package org.backend.web.common.email.error;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

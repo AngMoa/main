@@ -1,4 +1,4 @@
-package org.backend.web.common.dao;
+package org.backend.web.common.user.dao;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +42,7 @@ public class UserDao {
 
     public int join(Map<String, String> userDetail) {
         int insUser = 0;
+        int insProfileImg = 0;
 
         List<Map<String, Object>> loginInfo = new ArrayList<>();
         String userId = userDetail.get("userId");
@@ -58,16 +59,17 @@ public class UserDao {
 //            }
 //        });
             insUser = sqlSessionTemplate.insert("UserMapper.insUser", userDetail);
+//            insProfileImg = sqlSessionTemplate.insert("UserMapper.insProfileImg", userDetail);
         }
 
         return insUser;
     }
 
-    public List<Map<String, Object>> findId(String userNm, String userHpNo) {
+    public List<Map<String, Object>> findId(String userNm, String userEmail) {
 
         Map<String, Object> params = new HashMap<>();
         params.put("userNm", userNm);
-        params.put("userHpNo", userHpNo);
+        params.put("userEmail", userEmail);
 
         List<Map<String, Object>> userId = new ArrayList<>();
 

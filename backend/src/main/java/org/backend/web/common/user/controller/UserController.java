@@ -1,7 +1,8 @@
-package org.backend.web.common.controller;
+package org.backend.web.common.user.controller;
 
 import lombok.extern.slf4j.Slf4j;
-import org.backend.web.common.service.UserService;
+import org.backend.web.common.user.service.UserService;
+import org.backend.web.util.ImageUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +13,7 @@ import javax.servlet.http.HttpSession;
 import java.util.*;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
 @ResponseBody
@@ -24,6 +26,9 @@ public class UserController {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    private ImageUtil imageUtil;
 
     // 로그인
     @PostMapping(value = "/login")
@@ -41,10 +46,18 @@ public class UserController {
         if (passwordMatches) {
             List<Map<String, Object>> loginList = userService.login(userId, storedPasswordHash);
 
-            HttpSession session = httpRequest.getSession();
-            session.setAttribute("userId", userId);
+            if (!loginList.isEmpty()) {
+                Map<String, Object> userMap = loginList.get(0);
 
-            return ResponseEntity.ok(loginList);
+                HttpSession session = httpRequest.getSession();
+                session.setAttribute("userId", userId);
+                session.setAttribute("userNm", userMap.get("USER_NM"));
+                session.setAttribute("nickname", userMap.get("NICKNAME"));
+
+                return ResponseEntity.ok(loginList);
+            } else {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Collections.emptyList());
+            }
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Collections.emptyList());
         }
@@ -80,6 +93,13 @@ public class UserController {
             // 암호화된 비밀번호로 저장
             userDetail.put("password", hashedPassword);
 
+//            if(!file.isEmpty()) {
+//                // 이미지 파일 저장
+//                String imageNm = imageUtil.saveFile(file);
+//                // 이미지 루트 저장
+//                userDetail.put("imageNm", imageNm);
+//            }
+
             totalJoinedUsers += userService.join(userDetail);
         }
 
@@ -90,8 +110,8 @@ public class UserController {
     @PostMapping("/findId")
     public List<Map<String, Object>> findId(@RequestBody Map<String, String> request) {
         String userNm = request.get("userNm");
-        String userHpNo = request.get("userHpNo");
-        return userService.findId(userNm, userHpNo);
+        String userEmail = request.get("userEmail");
+        return userService.findId(userNm, userEmail);
     }
 
     // 비밀번호 찾기
@@ -102,7 +122,7 @@ public class UserController {
         String hashedPassword = passwordEncoder.encode(chgPw);
         findPwMap.put("chgPw", hashedPassword);
 
-        List<Map<String, Object>> findPwList = userService.chgPw(findPwMap);
+        List<Map<String, Object>> findPwList = userService.findPw(findPwMap);
 
         return findPwList;
     }

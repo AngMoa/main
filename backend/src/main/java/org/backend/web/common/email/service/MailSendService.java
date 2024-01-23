@@ -1,6 +1,6 @@
-package org.backend.web.common.service;
+package org.backend.web.common.email.service;
 
-import org.backend.web.common.util.RedisUtil;
+import org.backend.web.util.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;

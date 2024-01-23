@@ -1,4 +1,4 @@
-package org.backend.web.common.util;
+package org.backend.web.util;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;
