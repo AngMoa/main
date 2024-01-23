@@ -32,10 +32,10 @@ public class UserController {
 
     // 로그인
     @PostMapping(value = "/login")
-    public ResponseEntity<List<Map<String, Object>>> login(@RequestBody Map<String, String> request,
+    public ResponseEntity<List<Map<String, Object>>> login(@RequestBody Map<String, String> loginMap,
                                                            HttpServletRequest httpRequest) {
-        String userId = request.get("userId");
-        String enteredPassword = request.get("password");
+        String userId = loginMap.get("userId");
+        String enteredPassword = loginMap.get("password");
 
         // 암호화된 패스워드
         String storedPasswordHash = userService.getUserPassword(userId);
