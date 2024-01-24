@@ -27,6 +27,36 @@ public class UserDao {
         return loginInfo;
     }
 
+    public int loginLog(Map<String, String> logMap) {
+        int insLoginLog = 0;
+
+        List<Map<String, Object>> loginInfo = new ArrayList<>();
+
+        insLoginLog = sqlSessionTemplate.insert("UserMapper.loginLog", logMap);
+
+        return insLoginLog;
+    }
+
+    public int loginSuccess(String userId) {
+        int updLoginSuccess = 0;
+
+        List<Map<String, Object>> loginInfo = new ArrayList<>();
+
+        updLoginSuccess = sqlSessionTemplate.update("UserMapper.loginSuccess", userId);
+
+        return updLoginSuccess;
+    }
+
+    public int loginFail(String userId) {
+        int updateLoginFail = 0;
+
+        List<Map<String, Object>> loginInfo = new ArrayList<>();
+
+        updateLoginFail = sqlSessionTemplate.update("UserMapper.loginFail", userId);
+
+        return updateLoginFail;
+    }
+
     public String getUserPassword(String userId) {
         try {
             return sqlSessionTemplate.selectOne("UserMapper.encodePw", userId);

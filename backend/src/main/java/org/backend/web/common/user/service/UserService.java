@@ -24,6 +24,18 @@ public class UserService {
         return userDao.login(userId, hashedPassword);
     }
 
+    public int loginLog(Map<String,String> logMap) {
+        return userDao.loginLog(logMap);
+    }
+
+    public int loginSuccess(String userId) {
+        return userDao.loginSuccess(userId);
+    }
+
+    public int loginFail(String userId) {
+        return userDao.loginFail(userId);
+    }
+
     public String getUserPassword(String userId) {
         return userDao.getUserPassword(userId);
     }
