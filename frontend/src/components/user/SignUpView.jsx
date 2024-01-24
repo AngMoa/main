@@ -1,10 +1,14 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axiosInstance from "../../api/axiosInstance";
 
 const SignUpView = () => {
+    const navigate = useNavigate();
+
     const [signUpInput, setSignUpInput] = useState({
         userId: "",
         password: "",
+        passwdCheck: "",
         userNm: "",
         userEmail: "",
     });
@@ -17,23 +21,30 @@ const SignUpView = () => {
         // console.log(e.target);
     };
 
+    const { userId, password, passwdCheck, userNm, userEmail } = signUpInput;
+
     const onSignUp = async (e) => {
         e.preventDefault();
-
         try {
-            const res = await axiosInstance.post(`/com/join`, {
-                userId: signUpInput.userId,
-                password: signUpInput.password,
-                userNm: signUpInput.userNm,
-                userEmail: signUpInput.userEmail,
-            });
+            const res = await axiosInstance.post(`/com/join`, [
+                {
+                    userId: signUpInput.userId,
+                    password: signUpInput.password,
+                    userNm: signUpInput.userNm,
+                    userEmail: signUpInput.userEmail,
+                },
+            ]);
             if (res.status === 200) {
                 console.log(res.data);
+                navigate("/regSuccess");
             }
         } catch (error) {
             console.log(error);
         }
     };
+
+    // 비밀번호 같은지 체크
+    const isSame = password === passwdCheck;
 
     return (
         <div className="max-w-sm mx-auto p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-6 md:p-8">
@@ -52,7 +63,7 @@ const SignUpView = () => {
                         type="userNm"
                         name="userNm"
                         id="userNm"
-                        value={signUpInput.userNm}
+                        value={userNm}
                         onChange={handleInputChange}
                         className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                         placeholder="홍길동"
@@ -70,7 +81,7 @@ const SignUpView = () => {
                         type="userId"
                         name="userId"
                         id="userId"
-                        value={signUpInput.userId}
+                        value={userId}
                         onChange={handleInputChange}
                         className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                         placeholder="아이디"
@@ -88,7 +99,7 @@ const SignUpView = () => {
                         type="password"
                         name="password"
                         id="password"
-                        value={signUpInput.password}
+                        value={password}
                         onChange={handleInputChange}
                         placeholder="••••••••"
                         className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
@@ -103,13 +114,20 @@ const SignUpView = () => {
                         비밀번호 확인
                     </label>
                     <input
-                        type="passwordRe"
-                        name="passwordRe"
-                        id="passwordRe"
+                        type="password"
+                        name="passwdCheck"
+                        id="passwdCheck"
+                        value={passwdCheck}
+                        onChange={handleInputChange}
                         placeholder="••••••••"
                         className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                         required
                     />
+                    {passwdCheck !== "" && !isSame && (
+                        <p className="label-text-alt text-red-500">
+                            비밀번호가 일치하지 않습니다.
+                        </p>
+                    )}
                 </div>
                 <div>
                     <label
@@ -119,10 +137,10 @@ const SignUpView = () => {
                         이메일
                     </label>
                     <input
-                        type="userEmail"
+                        type="email"
                         name="userEmail"
                         id="userEmail"
-                        value={signUpInput.email}
+                        value={userEmail}
                         onChange={handleInputChange}
                         className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                         placeholder="name@company.com"
