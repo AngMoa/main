@@ -82,16 +82,6 @@ public class UserController {
         return logMap;
     }
 
-    // 로그아웃
-    @PostMapping("/logout")
-    public ResponseEntity<String> logout(HttpServletRequest request) {
-        HttpSession session = request.getSession(false);
-        if (session != null) {
-            session.invalidate();
-        }
-        return ResponseEntity.ok("Logged out successfully");
-    }
-
     // id 중복체크, id 확인이 필요한 경우
     @PostMapping(value = "/idCheck")
     public List<Map<String, Object>> idCheck(@RequestBody Map<String, String> idCheckMap) {
