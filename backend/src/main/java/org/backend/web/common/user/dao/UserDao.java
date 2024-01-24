@@ -77,7 +77,7 @@ public class UserDao {
         List<Map<String, Object>> loginInfo = new ArrayList<>();
         String userId = userDetail.get("userId");
 
-        loginInfo = sqlSessionTemplate.selectList("UserMapper.selLoginId", userId);
+        loginInfo = sqlSessionTemplate.selectList("UserMapper.idCheck", userId);
 
         if(loginInfo.isEmpty()) {
 

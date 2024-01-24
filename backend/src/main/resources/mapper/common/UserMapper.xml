@@ -56,12 +56,6 @@
          WHERE USER_ID = #{userId}
     </select>
 
-    <select id="selLoginId" resultType="int" parameterType="String">
-        SELECT 1
-          FROM angmoa.COMM_USER_MST
-         WHERE USER_ID = #{session.userId}
-    </select>
-
     <select id="idCheck" resultType="Map" parameterType="Map">
         SELECT COUNT(*)
           FROM angmoa.COMM_USER_MST
@@ -106,21 +100,6 @@
              </if>
              , 'admin'
              )
-    </insert>
-
-    <insert id="insProfileImg" parameterType="Map">
-        INSERT INTO angmoa.FILE_MST
-        (
-        USER_ID
-        , FILE_NM
-        , FILE_ID
-        )
-        VALUES
-        (
-        #{userId}
-        , #{imageNm}
-        , #{userNm}
-        )
     </insert>
 
     <select id="findId" resultType="Map" parameterType="Map">

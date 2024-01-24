@@ -1,5 +1,7 @@
 package org.backend.web.common.user.controller;
 
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.extern.slf4j.Slf4j;
 import org.backend.web.common.user.service.UserService;
 import org.backend.web.util.ClientUtils;
@@ -15,6 +17,8 @@ import java.util.*;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.multipart.MultipartFile;
+
+import static org.backend.web.util.JwtUtil.generateJwtToken;
 
 @Slf4j
 @ResponseBody
@@ -49,32 +53,24 @@ public class UserController {
         int insLoginLog = userService.loginLog(logMap);
 
         if (passwordMatches) {
-            handleSuccessfulLogin(userId, storedPasswordHash, httpRequest);
-            return ResponseEntity.ok("로그인 성공");
-        } else {
-            handleFailedLogin(userId);
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("아이디, 패스워드를 다시 한번 확인해주세요.");
-        }
-    }
+            List<Map<String, Object>> loginList = userService.login(userId, storedPasswordHash);
+            Map<String, Object> userMap = loginList.get(0);
 
-    // 성공적인 로그인 처리 메서드
-    private void handleSuccessfulLogin(String userId, String password, HttpServletRequest httpRequest) {
-        List<Map<String, Object>> loginList = userService.login(userId, password);
-
-        if (!loginList.isEmpty()) {
             // 로그인 실패 횟수 초기화
             userService.loginSuccess(userId);
 
-            Map<String, Object> userMap = loginList.get(0);
+            String nickname = (String) userMap.get("nickname");
+            String userNm = (String) userMap.get("userNm");
 
-            // 세션 설정
-            setSessionAttributes(httpRequest, userMap);
+            // JWT 토큰 생성
+            String token = generateJwtToken(userId, nickname, userNm);
+
+            // 로그인 성공 시 토큰 반환
+            return ResponseEntity.ok(token);
+        } else {
+            userService.loginFail(userId);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("아이디, 패스워드를 다시 한번 확인해주세요.");
         }
-    }
-
-    // 로그인 실패 처리 메서드
-    private void handleFailedLogin(String userId) {
-        userService.loginFail(userId);
     }
 
     // 로그인 로그를 위한 Map 생성 메서드
@@ -84,14 +80,6 @@ public class UserController {
         logMap.put("loginYn", passwordMatches ? "Y" : "N");
         logMap.put("userId", userId);
         return logMap;
-    }
-
-    // 세션 속성 설정 메서드
-    private void setSessionAttributes(HttpServletRequest httpRequest, Map<String, Object> userMap) {
-        HttpSession session = httpRequest.getSession();
-        session.setAttribute("userId", userMap.get("USER_ID"));
-        session.setAttribute("userNm", userMap.get("USER_NM"));
-        session.setAttribute("nickname", userMap.get("NICKNAME"));
     }
 
     // 로그아웃
