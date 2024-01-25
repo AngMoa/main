@@ -28,6 +28,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
             .csrf().disable()//csrf토큰 비활성화(테스트시 걸어두는게 좋음) 시큐리티는 csrf토큰이 있어야 접근가능함
+//            .csrf(csrf -> csrf
+//                    .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+//            );
             .authorizeRequests()
                 .antMatchers("/com/login","/com/join", "/**").permitAll()
                 .anyRequest().authenticated()
@@ -35,9 +38,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .logout()
                 .permitAll()
                 .and();
-//            .csrf(csrf -> csrf
-//                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-//            );
+
 
         http.sessionManagement() //중복로그인 제어
             .maximumSessions(1) //세션 최대 허용 수

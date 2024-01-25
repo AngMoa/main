@@ -1,24 +1,20 @@
 package org.backend.web.common.user.controller;
 
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.extern.slf4j.Slf4j;
 import org.backend.web.common.user.service.UserService;
 import org.backend.web.util.ClientUtils;
 import org.backend.web.util.ImageUtil;
+import org.backend.web.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.util.*;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.multipart.MultipartFile;
-
-import static org.backend.web.util.JwtUtil.generateJwtToken;
 
 @Slf4j
 @ResponseBody
@@ -50,7 +46,7 @@ public class UserController {
 
         // 로그인 로그 생성
         Map<String, String> logMap = createLoginLogMap(ip, userId, passwordMatches);
-        int insLoginLog = userService.loginLog(logMap);
+        userService.loginLog(logMap);
 
         if (passwordMatches) {
             List<Map<String, Object>> loginList = userService.login(userId, storedPasswordHash);
@@ -63,7 +59,7 @@ public class UserController {
             String userNm = (String) userMap.get("userNm");
 
             // JWT 토큰 생성
-            String token = generateJwtToken(userId, nickname, userNm);
+            String token = JwtUtil.generateJwtToken(userId, nickname, userNm);
 
             // 로그인 성공 시 토큰 반환
             return ResponseEntity.ok(token);
