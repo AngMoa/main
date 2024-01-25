@@ -1,10 +1,16 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import axiosInstance from "../../api/axiosInstance";
 
 const SignUpView = () => {
     const navigate = useNavigate();
+    const nameInput = useRef(null);
+    const idInput = useRef(null);
+    const pwInput = useRef(null);
+    const pwConfirmInput = useRef(null);
+    const emailInput = useRef(null);
 
+    // 입력값 핸들링
     const [signUpInput, setSignUpInput] = useState({
         userId: "",
         password: "",
@@ -23,6 +29,38 @@ const SignUpView = () => {
 
     const { userId, password, passwdCheck, userNm, userEmail } = signUpInput;
 
+    // 필수값 입력 핸들링
+    const handleSignUp = (e) => {
+        if (userNm.length < 1) {
+            nameInput.current.focus();
+            e.preventDefault();
+            return;
+        }
+        if (userId.length < 1) {
+            idInput.current.focus();
+            e.preventDefault();
+            return;
+        }
+        if (password.length < 1) {
+            pwInput.current.focus();
+            e.preventDefault();
+            return;
+        }
+        if (userEmail.length < 1) {
+            emailInput.current.focus();
+            e.preventDefault();
+            return;
+        }
+        if (isSame == false) {
+            pwConfirmInput.current.focus();
+            e.preventDefault();
+            return;
+        }
+
+        onSignUp();
+    };
+
+    // 회원가입 요청
     const onSignUp = async (e) => {
         e.preventDefault();
         try {
@@ -63,6 +101,7 @@ const SignUpView = () => {
                         type="userNm"
                         name="userNm"
                         id="userNm"
+                        ref={nameInput}
                         value={userNm}
                         onChange={handleInputChange}
                         className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
@@ -81,6 +120,7 @@ const SignUpView = () => {
                         type="userId"
                         name="userId"
                         id="userId"
+                        ref={idInput}
                         value={userId}
                         onChange={handleInputChange}
                         className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
@@ -99,6 +139,7 @@ const SignUpView = () => {
                         type="password"
                         name="password"
                         id="password"
+                        ref={pwInput}
                         value={password}
                         onChange={handleInputChange}
                         placeholder="••••••••"
@@ -117,6 +158,7 @@ const SignUpView = () => {
                         type="password"
                         name="passwdCheck"
                         id="passwdCheck"
+                        ref={pwConfirmInput}
                         value={passwdCheck}
                         onChange={handleInputChange}
                         placeholder="••••••••"
@@ -140,6 +182,7 @@ const SignUpView = () => {
                         type="email"
                         name="userEmail"
                         id="userEmail"
+                        ref={emailInput}
                         value={userEmail}
                         onChange={handleInputChange}
                         className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
@@ -149,7 +192,7 @@ const SignUpView = () => {
                 </div>
                 <button
                     type="submit"
-                    onClick={onSignUp}
+                    onClick={handleSignUp}
                     className="w-50 text-blue-400 bg-white border border-blue-400 hover:bg-blue-500 hover:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
                 >
                     다음 페이지
