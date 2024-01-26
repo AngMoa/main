@@ -1,4 +1,4 @@
-package org.backend.web.common.email.error;
+package org.backend.web.error;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -13,7 +13,7 @@ public class ExControllerAdvice {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(NullPointerException.class)
     public ResponseEntity<ErrorResult> testing(NullPointerException e){
-        ErrorResult errorResult=new ErrorResult("EMAIL",e.getMessage());
+        ErrorResult errorResult=new ErrorResult("ERROR",e.getMessage());
         return new ResponseEntity<>(errorResult,HttpStatus.BAD_REQUEST);
     }
 }
