@@ -38,10 +38,10 @@ public class JwtTokenProvider {
 
         // Access Token 생성
         String accessToken = Jwts.builder()
-                .setSubject(userId)              // 사용자 ID를 토큰의 서브젝트로 설정
-                .claim("nickname", nickname)  // 사용자의 닉네임을 추가
-                .claim("userNm", userNm)      // 사용자 이름을 추가
-                .claim("authorities", role)   // 사용자 권한 추가
+                .setSubject(userId)                         // 사용자 ID를 토큰의 서브젝트로 설정
+                .claim("nickname", nickname)             // 사용자의 닉네임을 추가
+                .claim("userNm", userNm)                 // 사용자 이름을 추가
+                .claim("authorities", "ROLE_"+role)   // 사용자 권한 추가
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(now + 3600000)) // 1시간
                 .signWith(key, SignatureAlgorithm.HS512)
