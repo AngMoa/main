@@ -2,9 +2,9 @@ package org.backend.web.common.user.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.backend.web.common.user.service.UserService;
+import org.backend.web.jwt.dto.TokenInfo;
 import org.backend.web.util.ClientUtils;
 import org.backend.web.util.ImageUtil;
-import org.backend.web.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,7 +33,7 @@ public class UserController {
 
     // 로그인
     @PostMapping(value = "/login")
-    public ResponseEntity<String> login(@RequestBody Map<String, String> loginMap, HttpServletRequest httpRequest) {
+    public ResponseEntity<TokenInfo> login(@RequestBody Map<String, String> loginMap, HttpServletRequest httpRequest) {
         String userId = loginMap.get("userId");
         String enteredPassword = loginMap.get("password");
         String ip = ClientUtils.getRemoteIP(httpRequest);
@@ -49,23 +49,16 @@ public class UserController {
         userService.loginLog(logMap);
 
         if (passwordMatches) {
-            List<Map<String, Object>> loginList = userService.login(userId, storedPasswordHash);
-            Map<String, Object> userMap = loginList.get(0);
+            TokenInfo tokenInfo = userService.login(userId, storedPasswordHash);
 
             // 로그인 실패 횟수 초기화
             userService.loginSuccess(userId);
 
-            String nickname = (String) userMap.get("nickname");
-            String userNm = (String) userMap.get("userNm");
-
-            // JWT 토큰 생성
-            String token = JwtUtil.generateJwtToken(userId, nickname, userNm);
-
             // 로그인 성공 시 토큰 반환
-            return ResponseEntity.ok(token);
+            return ResponseEntity.ok(tokenInfo);
         } else {
             userService.loginFail(userId);
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("아이디, 패스워드를 다시 한번 확인해주세요.");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
     }
 
@@ -156,5 +149,11 @@ public class UserController {
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Collections.singletonList("change pw fail").toString());
         }
+    }
+
+    // JWT 인증 테스트(/com/test)
+    @PostMapping("/test")
+    public String test() {
+        return "success";
     }
 }

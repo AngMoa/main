@@ -80,14 +80,6 @@ public class UserDao {
         loginInfo = sqlSessionTemplate.selectList("UserMapper.idCheck", userId);
 
         if(loginInfo.isEmpty()) {
-
-//        HashMap<String, Object> gridMap = new HashMap<String, Object>();
-//        userDetail.get(0).forEach((key, value) -> {
-//            switch (key) {
-//                case "DEPLOY_NO", "DEPLOY_NM", "HP_NO", "EMAIL", "ENTR_DT", "RETR_DT",
-//                        "WRK_TYP_CD", "DEL_YN", "ID_CHG_PRSN", "IP_CHG_PRSN" -> gridMap.put(key, value);
-//            }
-//        });
             insUser = sqlSessionTemplate.insert("UserMapper.insUser", userDetail);
 //            insProfileImg = sqlSessionTemplate.insert("UserMapper.insProfileImg", userDetail);
         }

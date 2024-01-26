@@ -5,13 +5,16 @@
 
 <mapper namespace="UserMapper">
     <select id="login" resultType="Map" parameterType="Map">
-        SELECT USER_ID
-             , USER_NM
-             , NICKNAME
-          FROM angmoa.COMM_USER_MST
-         WHERE USER_ID = #{userId}
-           AND USER_PASSWORD = #{password}
-           AND USE_YN = 'Y'
+        SELECT A.USER_ID
+             , A.USER_NM
+             , A.NICKNAME
+             , B.USER_ROLE
+          FROM angmoa.COMM_USER_MST A
+             , angmoa.USER_ROLE_MST B
+         WHERE A.USER_ID = B.USER_ID
+           AND A.USER_ID = #{userId}
+           AND A.USER_PASSWORD = #{password}
+           AND A.USE_YN = 'Y'
     </select>
 
     <insert id="loginLog" parameterType="Map">

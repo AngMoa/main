@@ -1,9 +1,12 @@
 package org.backend.web.common.user.service;
 
 import org.backend.web.common.user.dao.UserDao;
+import org.backend.web.jwt.JwtTokenProvider;
+import org.backend.web.jwt.dto.TokenInfo;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -20,8 +23,26 @@ public class UserService {
     @Autowired
     private SqlSessionTemplate sqlSessionTemplate;
 
-    public List<Map<String, Object>> login(String userId, String hashedPassword) {
-        return userDao.login(userId, hashedPassword);
+    private final JwtTokenProvider jwtTokenProvider;
+
+    @Autowired
+    public UserService(JwtTokenProvider jwtTokenProvider) {
+        this.jwtTokenProvider = jwtTokenProvider;
+    }
+
+    @Transactional
+    public TokenInfo login(String userId, String hashedPassword) {
+        List<Map<String, Object>> loginList = userDao.login(userId, hashedPassword);
+        Map<String, Object> userMap = loginList.get(0);
+
+        String nickname = (String) userMap.get("NICKNAME");
+        String userNm = (String) userMap.get("USER_NM");
+        String role = (String) userMap.get("USER_ROLE");
+
+        // 입력한 정보들을 기반으로 JWT 토큰 생성
+        TokenInfo tokenInfo = jwtTokenProvider.generateJwtToken(userId, nickname, userNm, role);
+
+        return tokenInfo;
     }
 
     public int loginLog(Map<String,String> logMap) {

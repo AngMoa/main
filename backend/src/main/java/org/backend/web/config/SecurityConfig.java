@@ -1,23 +1,27 @@
 package org.backend.web.config;
 
 import lombok.RequiredArgsConstructor;
+import org.backend.web.jwt.JwtAuthenticationFilter;
+import org.backend.web.jwt.JwtTokenProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.stereotype.Component;
 
-import static org.hibernate.criterion.Restrictions.and;
 
 @RequiredArgsConstructor
 @Configuration
 @EnableWebSecurity
 @Component
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+    private final JwtTokenProvider jwtTokenProvider;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -31,13 +35,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //            .csrf(csrf -> csrf
 //                    .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
 //            );
-            .authorizeRequests()
-                .antMatchers("/com/login","/com/join", "/**").permitAll()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                .authorizeRequests()
+                .antMatchers("/com/login","/com/join", "/").permitAll()
+                .antMatchers("/com/test").authenticated()
                 .anyRequest().authenticated()
                 .and()
-            .logout()
-                .permitAll()
-                .and();
+                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
 
 
         http.sessionManagement() //중복로그인 제어
