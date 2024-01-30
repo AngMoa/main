@@ -1,33 +1,33 @@
-import React, { useState, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useRef } from "react";
+// import { useNavigate } from "react-router-dom";
 import axiosInstance from "../../api/axiosInstance";
 
-const SignUpView = () => {
-    const navigate = useNavigate();
+const SignUpView = ({ nextStep, handleChange, values }) => {
+    // const navigate = useNavigate();
     const nameInput = useRef(null);
     const idInput = useRef(null);
     const pwInput = useRef(null);
     const pwConfirmInput = useRef(null);
-    const emailInput = useRef(null);
+    // const emailInput = useRef(null);
 
     // 입력값 핸들링
-    const [signUpInput, setSignUpInput] = useState({
-        userId: "",
-        password: "",
-        passwdCheck: "",
-        userNm: "",
-        userEmail: "",
-    });
+    // const [signUpInput, setSignUpInput] = useState({
+    //     userId: "",
+    //     password: "",
+    //     passwdCheck: "",
+    //     userNm: "",
+    //     userEmail: "",
+    // });
 
-    const handleInputChange = (e) => {
-        setSignUpInput((prev) => ({
-            ...prev,
-            [e.target.name]: e.target.value,
-        }));
-        // console.log(e.target);
-    };
+    // const handleInputChange = (e) => {
+    //     setSignUpInput((prev) => ({
+    //         ...prev,
+    //         [e.target.name]: e.target.value,
+    //     }));
+    //     // console.log(e.target);
+    // };
 
-    const { userId, password, passwdCheck, userNm, userEmail } = signUpInput;
+    const { userId, password, passwdCheck, userNm } = values;
 
     // 필수값 입력 핸들링
     const handleSignUp = (e) => {
@@ -46,18 +46,18 @@ const SignUpView = () => {
             e.preventDefault();
             return;
         }
-        if (userEmail.length < 1) {
-            emailInput.current.focus();
-            e.preventDefault();
-            return;
-        }
+        // if (userEmail.length < 1) {
+        //     emailInput.current.focus();
+        //     e.preventDefault();
+        //     return;
+        // }
         if (isSame == false) {
             pwConfirmInput.current.focus();
             e.preventDefault();
             return;
         }
 
-        onSignUp();
+        onSignUp(e);
     };
 
     // 회원가입 요청
@@ -66,15 +66,15 @@ const SignUpView = () => {
         try {
             const res = await axiosInstance.post(`/com/join`, [
                 {
-                    userId: signUpInput.userId,
-                    password: signUpInput.password,
-                    userNm: signUpInput.userNm,
-                    userEmail: signUpInput.userEmail,
+                    userId: values.userId,
+                    password: values.password,
+                    userNm: values.userNm,
+                    userEmail: values.userEmail,
                 },
             ]);
             if (res.status === 200) {
                 console.log(res.data);
-                navigate("/regSuccess");
+                nextStep();
             }
         } catch (error) {
             console.log(error);
@@ -88,7 +88,7 @@ const SignUpView = () => {
         <div className="max-w-sm mx-auto p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-6 md:p-8">
             <form className="space-y-6" action="#">
                 <h5 className="text-xl font-medium text-gray-900">
-                    앵모아 회원가입
+                    앵모아 회원가입(3. 정보입력)
                 </h5>
                 <div>
                     <label
@@ -103,7 +103,7 @@ const SignUpView = () => {
                         id="userNm"
                         ref={nameInput}
                         value={userNm}
-                        onChange={handleInputChange}
+                        onChange={handleChange("userNm")}
                         className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                         placeholder="홍길동"
                         required
@@ -122,7 +122,7 @@ const SignUpView = () => {
                         id="userId"
                         ref={idInput}
                         value={userId}
-                        onChange={handleInputChange}
+                        onChange={handleChange("userId")}
                         className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                         placeholder="아이디"
                         required
@@ -141,7 +141,7 @@ const SignUpView = () => {
                         id="password"
                         ref={pwInput}
                         value={password}
-                        onChange={handleInputChange}
+                        onChange={handleChange("password")}
                         placeholder="••••••••"
                         className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                         required
@@ -160,7 +160,7 @@ const SignUpView = () => {
                         id="passwdCheck"
                         ref={pwConfirmInput}
                         value={passwdCheck}
-                        onChange={handleInputChange}
+                        onChange={handleChange("passwdCheck")}
                         placeholder="••••••••"
                         className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                         required
@@ -171,7 +171,7 @@ const SignUpView = () => {
                         </p>
                     )}
                 </div>
-                <div>
+                {/* <div>
                     <label
                         htmlFor="userEmail"
                         className="block mb-2 text-sm font-medium text-gray-900"
@@ -189,13 +189,13 @@ const SignUpView = () => {
                         placeholder="name@company.com"
                         required
                     />
-                </div>
+                </div> */}
                 <button
                     type="submit"
                     onClick={handleSignUp}
                     className="w-50 text-blue-400 bg-white border border-blue-400 hover:bg-blue-500 hover:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
                 >
-                    다음 페이지
+                    가입하기
                 </button>
             </form>
         </div>
