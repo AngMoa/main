@@ -52,11 +52,12 @@ public class MailSendService {
         String toMail = email;
         String title = "회원 가입 인증 이메일 입니다."; // 이메일 제목
         String content =
-                "AngMoa를 방문해주셔서 감사합니다." + 	//html 형식으로 작성
-                        "<br><br>" +
-                        "인증 번호는 " + authNumber + "입니다." +
-                        "<br>" +
-                        "인증번호를 제대로 입력해주세요"; //이메일 내용 삽입
+                "<h3><a href='http://localhost:5173'>AngMoa</a>를 방문해주셔서 감사합니다.</h3>" +
+                "<br/>" +
+                "인증 번호는 <span style='font-weight: bold; font-size: 15px;'>" + authNumber + "</span>입니다." +
+                "<br/><br/>" +
+                "인증번호를 정확히 입력해주세요";
+
         mailSend(setFrom, toMail, title, content);
         return Integer.toString(authNumber);
     }
