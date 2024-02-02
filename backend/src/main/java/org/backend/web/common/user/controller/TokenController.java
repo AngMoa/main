@@ -18,10 +18,11 @@ public class TokenController {
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
-    // 토큰 만료시간 1시간 연장
+    // Refresh Token 으로 AccessToken 갱신
     @PostMapping("/extendTokenExpiration")
-    public ResponseEntity<String> extendTokenExpiration(@RequestBody TokenInfo tokenInfo) {
-        String token = tokenInfo.getAccessToken();
-        return jwtTokenProvider.extendTokenExpiration(token);
+    public ResponseEntity<TokenInfo> extendTokenExpiration(@RequestBody TokenInfo tokenInfo) {
+        String token = tokenInfo.getRefreshToken();
+
+        return jwtTokenProvider.refreshAccessToken(token);
     }
 }

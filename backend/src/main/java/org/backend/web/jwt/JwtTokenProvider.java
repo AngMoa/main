@@ -60,6 +60,47 @@ public class JwtTokenProvider {
                 .build();
     }
 
+    // Refresh Token 으로 AccessToken 갱신
+    public ResponseEntity<TokenInfo> refreshAccessToken(String refreshToken) {
+        try {
+            System.out.println("refreshToken = " + refreshToken);
+            // refresh token 유효성 검증 / 파싱
+            Claims claims = Jwts.parser().setSigningKey(key).parseClaimsJws(refreshToken).getBody();
+
+            // refresh token 에서 사용자 정보 추출
+            String userId = claims.getSubject();
+            String nickname = (String) claims.get("nickname");
+            String userNm = (String) claims.get("userNm");
+            String authoritiesClaim = (String) claims.get("authorities");
+            String role = (authoritiesClaim != null && authoritiesClaim.startsWith("ROLE_")) ? authoritiesClaim.substring(5) : null;
+
+            // newAccessToken 생성
+            String newAccessToken = Jwts.builder()
+                    .setSubject(userId)
+                    .claim("nickname", nickname)
+                    .claim("userNm", userNm)
+                    .claim("authorities", (role != null) ? "ROLE_" + role : null)
+                    .setIssuedAt(new Date())
+                    .setExpiration(new Date(System.currentTimeMillis() + 3600000)) // 1 hour
+                    .signWith(key, SignatureAlgorithm.HS512)
+                    .compact();
+
+            // newAccessToken과 기존 refreshToken을 빌드
+            TokenInfo tokenInfo = TokenInfo.builder()
+                    .grantType("Bearer ")
+                    .accessToken(newAccessToken)
+                    .refreshToken(refreshToken)
+                    .build();
+
+            return ResponseEntity.ok(tokenInfo);
+
+        } catch (JwtException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
+    }
+
+
     // 토큰 연장 메서드
     public ResponseEntity<String> extendTokenExpiration(String token) {
         try {
