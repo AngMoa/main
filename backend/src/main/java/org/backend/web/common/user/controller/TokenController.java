@@ -18,11 +18,19 @@ public class TokenController {
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
-    // Refresh Token 으로 AccessToken 갱신
-    @PostMapping("/extendTokenExpiration")
-    public ResponseEntity<TokenInfo> extendTokenExpiration(@RequestBody TokenInfo tokenInfo) {
+    // RefreshToken 으로 AccessToken 갱신
+    @PostMapping("/extendAccessTokenExpiration")
+    public ResponseEntity<TokenInfo> extendAccessTokenExpiration(@RequestBody TokenInfo tokenInfo) {
         String token = tokenInfo.getRefreshToken();
 
-        return jwtTokenProvider.refreshAccessToken(token);
+        return jwtTokenProvider.reissueAccessToken(token);
+    }
+
+    // AccessToken 으로 RefreshToken 갱신
+    @PostMapping("/extendRefreshTokenExpiration")
+    public ResponseEntity<TokenInfo> extendRefreshTokenExpiration(@RequestBody TokenInfo tokenInfo) {
+        String token = tokenInfo.getAccessToken();
+
+        return jwtTokenProvider.reissueRefreshToken(token);
     }
 }
