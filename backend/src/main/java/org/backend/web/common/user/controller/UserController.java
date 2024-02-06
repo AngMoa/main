@@ -154,6 +154,11 @@ public class UserController {
     // JWT 인증 테스트(/com/test)
     @PostMapping("/test")
     public String test() {
-        return "success";
+        return "auth: admin";
+    }
+
+    @PostMapping("/test2")
+    public String test2() {
+        return "auth: user";
     }
 }

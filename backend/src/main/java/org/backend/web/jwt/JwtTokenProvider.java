@@ -40,15 +40,17 @@ public class JwtTokenProvider {
         String accessToken = Jwts.builder()
                 .setSubject(userId)                         // 사용자 ID를 토큰의 서브젝트로 설정
                 .claim("nickname", nickname)             // 사용자의 닉네임을 추가
-                .claim("userNm", userNm)                 // 사용자 이름을 추가
                 .claim("authorities", "ROLE_"+role)   // 사용자 권한 추가
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(now + 3600000)) // 1시간
+                .setExpiration(new Date(now + 1800000)) // 30분
                 .signWith(key, SignatureAlgorithm.HS512)
                 .compact();
 
         // Refresh Token 생성
         String refreshToken = Jwts.builder()
+                .setSubject(userId)                         // 사용자 ID를 토큰의 서브젝트로 설정
+                .claim("nickname", nickname)             // 사용자의 닉네임을 추가
+                .claim("authorities", "ROLE_"+role)   // 사용자 권한 추가
                 .setExpiration(new Date(now + 86400000)) // 1일
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
@@ -59,6 +61,81 @@ public class JwtTokenProvider {
                 .refreshToken(refreshToken)
                 .build();
     }
+
+    // RefreshToken 으로 AccessToken 갱신
+    public ResponseEntity<TokenInfo> reissueAccessToken(String refreshToken) {
+        try {
+            // refresh token 유효성 검증 / 파싱
+            Claims claims = Jwts.parser().setSigningKey(key).parseClaimsJws(refreshToken).getBody();
+
+            // refresh token 에서 사용자 정보 추출
+            String userId = claims.getSubject();
+            String nickname = (String) claims.get("nickname");
+            String authoritiesClaim = (String) claims.get("authorities");
+            String role = (authoritiesClaim != null && authoritiesClaim.startsWith("ROLE_")) ? authoritiesClaim.substring(5) : null;
+
+            // newAccessToken 생성
+            String newAccessToken = Jwts.builder()
+                    .setSubject(userId)
+                    .claim("nickname", nickname)
+                    .claim("authorities", (role != null) ? "ROLE_" + role : null)
+                    .setIssuedAt(new Date())
+                    .setExpiration(new Date(System.currentTimeMillis() + 1800000)) // 30분
+                    .signWith(key, SignatureAlgorithm.HS512)
+                    .compact();
+
+            // newAccessToken과 기존 refreshToken을 빌드
+            TokenInfo tokenInfo = TokenInfo.builder()
+                    .grantType("Bearer ")
+                    .accessToken(newAccessToken)
+                    .refreshToken(refreshToken)
+                    .build();
+
+            return ResponseEntity.ok(tokenInfo);
+
+        } catch (JwtException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
+    }
+
+    // AccessToken 으로 RefreshToken 갱신
+    public ResponseEntity<TokenInfo> reissueRefreshToken(String accessToken) {
+        try {
+            // access token 유효성 검증 / 파싱
+            Claims claims = Jwts.parser().setSigningKey(key).parseClaimsJws(accessToken).getBody();
+
+            // access token 에서 사용자 정보 추출
+            String userId = claims.getSubject();
+            String nickname = (String) claims.get("nickname");
+            String authoritiesClaim = (String) claims.get("authorities");
+            String role = (authoritiesClaim != null && authoritiesClaim.startsWith("ROLE_")) ? authoritiesClaim.substring(5) : null;
+
+            // newRefreshToken 생성
+            String newRefreshToken = Jwts.builder()
+                    .setSubject(userId)
+                    .claim("nickname", nickname)
+                    .claim("authorities", (role != null) ? "ROLE_" + role : null)
+                    .setIssuedAt(new Date())
+                    .setExpiration(new Date(System.currentTimeMillis() + 86400000)) // 1일
+                    .signWith(key, SignatureAlgorithm.HS512)
+                    .compact();
+
+            // newAccessToken과 기존 refreshToken을 빌드
+            TokenInfo tokenInfo = TokenInfo.builder()
+                    .grantType("Bearer ")
+                    .accessToken(accessToken)
+                    .refreshToken(newRefreshToken)
+                    .build();
+
+            return ResponseEntity.ok(tokenInfo);
+
+        } catch (JwtException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
+    }
+
 
     // 토큰 연장 메서드
     public ResponseEntity<String> extendTokenExpiration(String token) {

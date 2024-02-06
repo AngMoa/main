@@ -1,8 +1,19 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import logo from "../../assets/logo.png";
+import { useAuthStore } from "../../store/store";
 
 const Header = () => {
+    // zustand로 관리할 로그인 여부
+    const { isLoginState, setIsLoginState } = useAuthStore();
+
+    // 로그아웃
+    const handleLogout = () => {
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
+        setIsLoginState();
+    };
+
     return (
         <>
             <nav className="bg-white border-gray-200 dark:bg-gray-900">
@@ -71,23 +82,37 @@ const Header = () => {
                             </li>
                         </ul>
                         <ul className="flex flex-row font-medium mt-0 space-x-8 rtl:space-x-reverse text-sm">
-                            <li>
-                                <Link
-                                    to="/login"
-                                    className="text-gray-900 dark:text-white hover:underline"
-                                    aria-current="page"
-                                >
-                                    로그인
-                                </Link>
-                            </li>
-                            <li>
-                                <Link
-                                    to="signUp"
-                                    className="text-gray-900 dark:text-white hover:underline"
-                                >
-                                    회원가입
-                                </Link>
-                            </li>
+                            {isLoginState ? (
+                                <li>
+                                    <button
+                                        onClick={handleLogout}
+                                        className="text-gray-900 dark:text-white hover:underline"
+                                        aria-current="page"
+                                    >
+                                        로그아웃
+                                    </button>
+                                </li>
+                            ) : (
+                                <>
+                                    <li>
+                                        <Link
+                                            to="/login"
+                                            className="text-gray-900 dark:text-white hover:underline"
+                                            aria-current="page"
+                                        >
+                                            로그인
+                                        </Link>
+                                    </li>
+                                    <li>
+                                        <Link
+                                            to="signUp"
+                                            className="text-gray-900 dark:text-white hover:underline"
+                                        >
+                                            회원가입
+                                        </Link>
+                                    </li>
+                                </>
+                            )}
                             <li>
                                 <a
                                     href="#"
