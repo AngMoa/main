@@ -8,6 +8,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * @Desc     : JWT 연장 Controller
+ * @File     : TokenController.java
+ * @Author   : SJY
+ */
 @RestController
 public class TokenController {
 
@@ -18,7 +23,11 @@ public class TokenController {
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
-    // RefreshToken 으로 AccessToken 갱신
+    /**
+     * RefreshToken 으로 AccessToken 갱신
+     * @param tokenInfo
+     * @return tokenInfo
+     */
     @PostMapping("/extendAccessTokenExpiration")
     public ResponseEntity<TokenInfo> extendAccessTokenExpiration(@RequestBody TokenInfo tokenInfo) {
         String token = tokenInfo.getRefreshToken();
@@ -26,7 +35,11 @@ public class TokenController {
         return jwtTokenProvider.reissueAccessToken(token);
     }
 
-    // AccessToken 으로 RefreshToken 갱신
+    /**
+     * AccessToken 으로 RefreshToken 갱신
+     * @param tokenInfo
+     * @return tokenInfo
+     */
     @PostMapping("/extendRefreshTokenExpiration")
     public ResponseEntity<TokenInfo> extendRefreshTokenExpiration(@RequestBody TokenInfo tokenInfo) {
         String token = tokenInfo.getAccessToken();

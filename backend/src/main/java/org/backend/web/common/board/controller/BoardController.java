@@ -9,6 +9,11 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @Desc     : 커뮤니티 Controller
+ * @File     : BoardController.java
+ * @Author   : SJY
+ */
 @ResponseBody
 @RestController
 @RequestMapping("/board")
@@ -20,6 +25,11 @@ public class BoardController {
     @Autowired
     BoardService boardService;
 
+    /**
+     * 게시글 목록 조회
+     * @param boardDto
+     * @return boardService.boardList(boardDto)
+     */
     @PostMapping(value = "/boardList")
     public List<Map<String, Object>> boardList(@RequestBody(required = false) BoardDto boardDto) {
         return boardService.boardList(boardDto);
