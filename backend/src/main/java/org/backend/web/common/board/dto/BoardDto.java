@@ -22,4 +22,6 @@ public class BoardDto {
     private Long prntCmnts;        // 상위 댓글(부모 댓글)
     private Long cmntsId;          // 댓글 ID
     private String boardCmnts;     // 게시물 댓글
+    private Date cmntCreDtm;       // 댓글 작성일시
+    private Date cmntChgDtm;       // 댓글 수정일시
 }

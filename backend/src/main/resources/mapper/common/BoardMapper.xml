@@ -44,6 +44,8 @@
              , C.BOARD_CMNTS                                            -- 게시물 댓글
              , C.PRNT_CMNTS                                             -- 상위 댓글(부모 댓글)
              , C.CMNTS_ID                                               -- 댓글 ID
+             , DATE_FORMAT(C.CRE_DTM,'%Y-%m-%d %H:%i') AS CMNT_CRE_DTM  -- 댓글 작성일시
+             , DATE_FORMAT(C.CHG_DTM,'%Y-%m-%d %H:%i') AS CMNT_CHG_DTM  -- 댓글 수정일시
           FROM angmoa.BOARD_MST A      /* tbl: 게시물 마스터 */
              , angmoa.COMM_USER_MST B  /* tbl: 사용자마스터 */
              , angmoa.BOARD_DETAIL C   /* tbl: 게시물 상세 */
