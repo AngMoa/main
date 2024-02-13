@@ -3,7 +3,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 
 <mapper namespace="BoardMapper">
-    <select id="read" resultType="Map" parameterType="Map">
+    <select id="boardList" resultType="Map" parameterType="Map">
         SELECT A.BOARD_ID                                               -- 게시물 번호
              , A.BOARD_TITLE                                            -- 게시물 제목
              , A.BOARD_CONTENT                                          -- 게시물 내용
@@ -27,5 +27,29 @@
          <if test="nickname != null">
            AND B.NICKNAME = #{nickname}
          </if>
+    </select>
+
+    <select id="boardDetail" resultType="Map" parameterType="Map">
+        SELECT A.BOARD_ID                                               -- 게시물 번호
+             , A.BOARD_TITLE                                            -- 게시물 제목
+             , A.BOARD_CONTENT                                          -- 게시물 내용
+             , A.VIEWS                                                  -- 조회수
+             , A.BOARD_TYP                                              -- 게시물 유형
+             , B.NICKNAME                                               -- 작성자 닉네임
+             , B.USER_ID                                                -- 사용자 ID
+             , A.CRER_ID                                                -- 작성자 ID
+             , DATE_FORMAT(A.CRE_DTM,'%Y-%m-%d %H:%i') AS CRE_DTM       -- 작성일
+             , A.CHGR_ID                                                -- 수정자 ID
+             , DATE_FORMAT(A.CHG_DTM,'%Y-%m-%d %H:%i') AS CHG_DTM       -- 수정일
+             , C.BOARD_CMNTS                                            -- 게시물 댓글
+             , C.PRNT_CMNTS                                             -- 상위 댓글(부모 댓글)
+             , C.CMNTS_ID                                               -- 댓글 ID
+          FROM angmoa.BOARD_MST A      /* tbl: 게시물 마스터 */
+             , angmoa.COMM_USER_MST B  /* tbl: 사용자마스터 */
+             , angmoa.BOARD_DETAIL C   /* tbl: 게시물 상세 */
+         WHERE A.USER_ID = B.USER_ID
+           AND A.USER_ID = C.USER_ID
+           AND A.BOARD_ID = C.BOARD_ID
+           AND A.BOARD_TYP = #{boardTyp}
     </select>
 </mapper>

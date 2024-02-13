@@ -18,4 +18,8 @@ public class BoardDto {
     private String chgrId;         // 수정자 ID
     private Date chgDtm;           // 수정일
     private String boardTyp;       // 게시물 유형 (1: 자유게시판, 2: Q&A, 3: 제보, 4: 공지사항)
+
+    private Long prntCmnts;        // 상위 댓글(부모 댓글)
+    private Long cmntsId;          // 댓글 ID
+    private String boardCmnts;     // 게시물 댓글
 }

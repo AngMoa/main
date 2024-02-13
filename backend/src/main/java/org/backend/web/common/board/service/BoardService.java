@@ -14,7 +14,11 @@ public class BoardService {
     private SqlSessionTemplate sqlSessionTemplate;
 
     public List<Map<String, Object>> boardList(BoardDto boardDto) {
-        return sqlSessionTemplate.selectList("BoardMapper.read", boardDto);
+        return sqlSessionTemplate.selectList("BoardMapper.boardList", boardDto);
+    }
+
+    public List<Map<String, Object>> boardDetail(BoardDto boardDto) {
+        return sqlSessionTemplate.selectList("BoardMapper.boardDetail", boardDto);
     }
 
 }

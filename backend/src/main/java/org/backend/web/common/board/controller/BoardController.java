@@ -34,4 +34,14 @@ public class BoardController {
     public List<Map<String, Object>> boardList(@RequestBody(required = false) BoardDto boardDto) {
         return boardService.boardList(boardDto);
     }
+
+    /**
+     * 게시글 상세 조회
+     * @param boardDto
+     * @return boardService.boardDetail(boardDto)
+     */
+    @PostMapping(value = "/boardDetail")
+    public List<Map<String, Object>> boardDetail(@RequestBody BoardDto boardDto) {
+        return boardService.boardDetail(boardDto);
+    }
 }
