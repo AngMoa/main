@@ -1,11 +1,14 @@
-import React, { useState, useRef } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
-import axiosInstance from "../../api/axiosInstance";
-import { useAuthStore } from "../../../store/store";
+"use client";
 
-const SignInView = () => {
-    const navigate = useNavigate();
+import Link from "next/link";
+import { useState, useRef } from "react";
+import axios from "axios";
+import axiosInstance from "../../../src/api/axiosInstance";
+import { useAuthStore } from "../../../store/store";
+// import { Link, useNavigate } from "react-router-dom";
+
+export default function LoginPage() {
+    // const navigate = useNavigate();
     const idInput = useRef(null);
     const pwInput = useRef(null);
 
@@ -74,7 +77,8 @@ const SignInView = () => {
                 setIsLoginState();
                 console.log("로그인 여부 state>", isLoginState);
 
-                navigate("/");
+                // !!! 넥스트로 다시 바꾸기!!!
+                // navigate("/");
             }
         } catch (error) {
             console.log(error);
@@ -126,7 +130,7 @@ const SignInView = () => {
                         required
                     />
                     <Link
-                        to="/findIdPw"
+                        href="/findIdPw"
                         className="label-text-alt link flex flex-row-reverse text-blue-400"
                     >
                         아이디/비밀번호 찾기
@@ -168,6 +172,4 @@ const SignInView = () => {
             </form>
         </>
     );
-};
-
-export default SignInView;
+}

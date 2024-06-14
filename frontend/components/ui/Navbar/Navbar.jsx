@@ -1,9 +1,11 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import logo from "../../assets/logo.png";
-import { useAuthStore } from "../../../store/store";
+"use client";
 
-const Header = () => {
+import Link from "next/link";
+import Image from "next/image";
+import { useAuthStore } from "../../../store/store";
+import LogoImage from "../../../public/images/logo.png";
+
+export default function Navbar() {
     // zustand로 관리할 로그인 여부
     const { isLoginState, setIsLoginState } = useAuthStore();
 
@@ -19,10 +21,14 @@ const Header = () => {
             <nav className="bg-white border-gray-200 dark:bg-gray-900">
                 <div className="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl p-4">
                     <Link
-                        to="/"
+                        href="/"
                         className="flex items-center space-x-3 rtl:space-x-reverse"
                     >
-                        <img src={logo} className="h-8" alt="AngMoa Logo" />
+                        <Image
+                            src={LogoImage}
+                            className="h-8"
+                            alt="AngMoa Logo"
+                        />
                         {/* <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
                             AngMoa
                         </span> */}
@@ -51,7 +57,7 @@ const Header = () => {
                         <ul className="flex flex-row font-medium mt-0 space-x-8 rtl:space-x-reverse text-sm">
                             <li>
                                 <Link
-                                    to="/"
+                                    href="/"
                                     className="text-gray-900 dark:text-white hover:underline"
                                     aria-current="page"
                                 >
@@ -98,7 +104,7 @@ const Header = () => {
                                 <>
                                     <li>
                                         <Link
-                                            to="/login"
+                                            href="/login"
                                             className="text-gray-900 dark:text-white hover:underline"
                                             aria-current="page"
                                         >
@@ -107,7 +113,7 @@ const Header = () => {
                                     </li>
                                     <li>
                                         <Link
-                                            to="signUp"
+                                            href="/signUp"
                                             className="text-gray-900 dark:text-white hover:underline"
                                         >
                                             회원가입
@@ -129,6 +135,4 @@ const Header = () => {
             </nav>
         </>
     );
-};
-
-export default Header;
+}
