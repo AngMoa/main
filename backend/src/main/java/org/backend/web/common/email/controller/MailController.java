@@ -10,16 +10,32 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 
+/**
+ * @Desc     : 이메일 인증 Controller
+ * @File     : MailController.java
+ * @Author   : SJY
+ */
 @RestController
 @RequiredArgsConstructor
 public class MailController {
     private final MailSendService mailService;
 
+    /**
+     * 메일 전송
+     * @param emailDto
+     * @return 인증번호 6자리
+     */
     @PostMapping("/mailSend")
     public String mailSend(@RequestBody @Valid EmailRequestDto emailDto) {
         System.out.println("이메일 인증 이메일 :" + emailDto.getEmail());
         return mailService.joinEmail(emailDto.getEmail());
     }
+
+    /**
+     * 메일 인증번호 인증
+     * @param emailCheckDto
+     * @return ok
+     */
     @PostMapping("/mailAuthCheck")
     public String AuthCheck(@RequestBody @Valid EmailCheckDto emailCheckDto){
         boolean Checked=mailService.CheckAuthNum(emailCheckDto.getEmail(),emailCheckDto.getAuthNum());

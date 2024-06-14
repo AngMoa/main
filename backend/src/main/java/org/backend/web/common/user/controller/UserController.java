@@ -16,6 +16,11 @@ import java.util.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.multipart.MultipartFile;
 
+/**
+ * @Desc     : 사용자 관련 Controller
+ * @File     : UserController.java
+ * @Author   : SJY
+ */
 @Slf4j
 @ResponseBody
 @RestController
@@ -31,7 +36,11 @@ public class UserController {
     @Autowired
     private ImageUtil imageUtil;
 
-    // 로그인
+    /**
+     * 로그인
+     * @param loginMap (userId, password)
+     * @return ResponseEntity.ok(tokenInfo)
+     */
     @PostMapping(value = "/login")
     public ResponseEntity<TokenInfo> login(@RequestBody Map<String, String> loginMap, HttpServletRequest httpRequest) {
         String userId = loginMap.get("userId");
@@ -62,7 +71,11 @@ public class UserController {
         }
     }
 
-    // 로그인 로그를 위한 Map 생성 메서드
+    /**
+     * 로그인 로그
+     * @param ip, userId, passwordMatches
+     * @return logMap
+     */
     private Map<String, String> createLoginLogMap(String ip, String userId, boolean passwordMatches) {
         Map<String, String> logMap = new HashMap<>();
         logMap.put("ip", ip);
@@ -71,13 +84,21 @@ public class UserController {
         return logMap;
     }
 
-    // id 중복체크, id 확인이 필요한 경우
+    /**
+     * id 중복체크, id 확인이 필요한 경우
+     * @param idCheckMap
+     * @return 1 (id 존재), 0 (id 부재)
+     */
     @PostMapping(value = "/idCheck")
     public List<Map<String, Object>> idCheck(@RequestBody Map<String, String> idCheckMap) {
         return userService.idCheck(idCheckMap);
     }
 
-    // 회원가입
+    /**
+     * 회원가입
+     * @param userDetailList
+     * @return totalJoinedUsers
+     */
     @PostMapping("/join")
     public int join(@RequestParam(name = "file", required = false) MultipartFile file,
                     @RequestBody List<Map<String, String>> userDetailList) {
@@ -105,15 +126,23 @@ public class UserController {
         return totalJoinedUsers;
     }
 
-    // 아이디 찾기
+    /**
+     * 아이디 찾기
+     * @param findIdMap
+     * @return USER_ID
+     */
     @PostMapping("/findId")
-    public List<Map<String, Object>> findId(@RequestBody Map<String, String> request) {
-        String userNm = request.get("userNm");
-        String userEmail = request.get("userEmail");
+    public List<Map<String, Object>> findId(@RequestBody Map<String, String> findIdMap) {
+        String userNm = findIdMap.get("userNm");
+        String userEmail = findIdMap.get("userEmail");
         return userService.findId(userNm, userEmail);
     }
 
-    // 비밀번호 찾기
+    /**
+     * 비밀번호 찾기
+     * @param findPwMap
+     * @return findPwList
+     */
     @PostMapping("/findPw")
     public List<Map<String, Object>> findPw(@RequestBody Map<String, String> findPwMap) {
         String chgPw = findPwMap.get("chgPw");
@@ -126,7 +155,11 @@ public class UserController {
         return findPwList;
     }
 
-    // 비밀번호 변경
+    /**
+     * 비밀번호 변경
+     * @param chgPwMap
+     * @return ResponseEntity.ok("change pw success")
+     */
     @PostMapping("/chgPw")
     public ResponseEntity<String> chgPw(@RequestBody Map<String, String> chgPwMap) {
         String userId = chgPwMap.get("userId");
